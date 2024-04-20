@@ -4,9 +4,9 @@ K-Tax เป็น Application คำนวนภาษี ที่ให้ผ
 
 ## Getting Started
 
-- <input type="checkbox" checked> 1. Clone this repository
-- <input type="checkbox" checked> 2. Create repository in your `Github` account
-- <input type="checkbox" checked> 3. Push starter code to your `Github` account
+- [x] <input type="checkbox" checked> 1. Clone this repository
+- [x] <input type="checkbox" checked> 2. Create repository in your `Github` account
+- [x] <input type="checkbox" checked> 3. Push starter code to your `Github` account
 4. Create new branch that according to story name
 5. Follow `Functional Requirement` and `Non-Functional Requirement`
 
@@ -32,9 +32,9 @@ K-Tax เป็น Application คำนวนภาษี ที่ให้ผ
 
 ## Non-Functional Requirement
 - มี `Unit Test` ครอบคลุม
-- ใช้ `go module`
-- ใช้ go module `go mod init github.com/<your github name>/assessment-tax`
-- ใช้ go 1.21 or above
+- [x] <input type="checkbox" checked> ใช้ `go module`
+- [x] <input type="checkbox" checked> ใช้ go module `go mod init github.com/<your github name>/assessment-tax`
+- [x] <input type="checkbox" checked> ใช้ go 1.21 or above
 - ใช้ `PostgreSQL`
 - API port _MUST_ get from `environment variable` name `PORT`
 - database url _MUST_ get from environment variable name `DATABASE_URL`
