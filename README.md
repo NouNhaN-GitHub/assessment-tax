@@ -35,11 +35,11 @@ K-Tax เป็น Application คำนวนภาษี ที่ให้ผ
 - [x] <input type="checkbox" checked> ใช้ `go module`
 - [x] <input type="checkbox" checked> ใช้ go module `go mod init github.com/<your github name>/assessment-tax`
 - [x] <input type="checkbox" checked> ใช้ go 1.21 or above
-- ใช้ `PostgreSQL`
+- [x] <input type="checkbox" checked> ใช้ `PostgreSQL`
 - API port _MUST_ get from `environment variable` name `PORT`
 - database url _MUST_ get from environment variable name `DATABASE_URL`
   - ตัวอย่าง `DATABASE_URL=host={REPLACE_ME} port=5432 user={REPLACE_ME} password={REPLACE_ME} dbname={REPLACE_ME} sslmode=disable`
-- ใช้ `docker compose` สำหรับต่อ Database
+- [x] <input type="checkbox" checked> ใช้ `docker compose` สำหรับต่อ Database
 - API support `Graceful Shutdown`
   - เช่น ถ้ามีการกด `Ctrl + C` จะ print `shutting down the server`
 - มี Dockerfile สำหรับ build image และเป็น `Multi-stage build`
