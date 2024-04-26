@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/NouNhaN-GitHub/assessment-tax/ktaxes"
 	"github.com/NouNhaN-GitHub/assessment-tax/postgres"
@@ -22,5 +23,5 @@ func main() {
 	handler := ktaxes.New(p)
 	e.GET("/", handler.AllowanceHandler)
 
-	e.Logger.Fatal(e.Start(":1323"))
+	e.Logger.Fatal(e.Start(":" + os.Getenv("PORT")))
 }
