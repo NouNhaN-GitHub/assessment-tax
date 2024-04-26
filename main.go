@@ -12,6 +12,7 @@ import (
 	"github.com/NouNhaN-GitHub/assessment-tax/ktaxes"
 	"github.com/NouNhaN-GitHub/assessment-tax/postgres"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
@@ -21,12 +22,31 @@ func main() {
 	}
 
 	e := echo.New()
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, Go Bootcamp!")
 	})
 
 	handler := ktaxes.New(p)
-	e.GET("/", handler.AllowanceHandler)
+
+	ktax := e.Group("/ktaxes")
+	{
+		ktax.GET("/allowance", handler.AllowanceHandler)
+	}
+
+	admin := e.Group("/admin")
+	admin.Use(middleware.BasicAuth(func(username string, password string, c echo.Context) (bool, error) {
+		if username == os.Getenv("ADMIN_USERNAME") && password == os.Getenv("ADMIN_PASSWORD") {
+			return true, nil
+		}
+
+		return false, nil
+	}))
+	{
+
+	}
 
 	go func() {
 		if err := e.Start(":" + os.Getenv("PORT")); err != nil && err != http.ErrServerClosed {
