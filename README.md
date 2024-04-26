@@ -36,8 +36,8 @@ K-Tax เป็น Application คำนวนภาษี ที่ให้ผ
 - [x] <input type="checkbox" checked> ใช้ go module `go mod init github.com/<your github name>/assessment-tax`
 - [x] <input type="checkbox" checked> ใช้ go 1.21 or above
 - [x] <input type="checkbox" checked> ใช้ `PostgreSQL`
-- API port _MUST_ get from `environment variable` name `PORT`
-- database url _MUST_ get from environment variable name `DATABASE_URL`
+- [x] <input type="checkbox" checked> API port _MUST_ get from `environment variable` name `PORT`
+- [x] <input type="checkbox" checked> database url _MUST_ get from environment variable name `DATABASE_URL`
   - ตัวอย่าง `DATABASE_URL=host={REPLACE_ME} port=5432 user={REPLACE_ME} password={REPLACE_ME} dbname={REPLACE_ME} sslmode=disable`
 - [x] <input type="checkbox" checked> ใช้ `docker compose` สำหรับต่อ Database
 - API support `Graceful Shutdown`
@@ -47,7 +47,7 @@ K-Tax เป็น Application คำนวนภาษี ที่ให้ผ
 - ใช้ `gofmt` และ `go vet`
 - แยก Branch ของแต่ละ Story ออกจาก `main` และ Merge กลับไปยัง `main` Branch เสมอ
   - เช่น story ที่ 1 จะใช้ branch ชื่อ `feature/story-1` หรือ `feature/store-1-create-tax-calculation`
-- admin กำหนด Basic authen ด้วย username: `adminTax`, password: `admin!`
+- [x] <input type="checkbox" checked> admin กำหนด Basic authen ด้วย username: `adminTax`, password: `admin!`
   - username และ password ต้องเป็น environment variable
   - และ `env` ต้องเป็นชื่อ `ADMIN_USERNAME` และ `ADMIN_PASSWORD`
 - **การ run program จะใช้คำสั่ง docker compose up เพื่อเตรียม environment และ go run main.go เพื่อ start api**
@@ -57,7 +57,7 @@ K-Tax เป็น Application คำนวนภาษี ที่ให้ผ
 	- `export DATABASE_URL={REPLACE_ME}`
 	- `export ADMIN_USERNAME=adminTax`
 	- `export ADMIN_PASSWORD=admin!`
-- port ของ api จะต้องเป็น 8080
+- [x] <input type="checkbox" checked> port ของ api จะต้องเป็น 8080
 
 ## Assumption
 

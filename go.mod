@@ -2,7 +2,11 @@ module github.com/NouNhaN-GitHub/assessment-tax
 
 go 1.22.0
 
-require github.com/labstack/echo/v4 v4.12.0
+require (
+	github.com/joho/godotenv v1.5.1
+	github.com/labstack/echo/v4 v4.12.0
+	github.com/lib/pq v1.10.9
+)
 
 require (
 	github.com/labstack/gommon v0.4.2 // indirect
