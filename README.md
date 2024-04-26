@@ -40,7 +40,7 @@ K-Tax เป็น Application คำนวนภาษี ที่ให้ผ
 - [x] <input type="checkbox" checked> database url _MUST_ get from environment variable name `DATABASE_URL`
   - ตัวอย่าง `DATABASE_URL=host={REPLACE_ME} port=5432 user={REPLACE_ME} password={REPLACE_ME} dbname={REPLACE_ME} sslmode=disable`
 - [x] <input type="checkbox" checked> ใช้ `docker compose` สำหรับต่อ Database
-- API support `Graceful Shutdown`
+- [x] <input type="checkbox" checked> API support `Graceful Shutdown`
   - เช่น ถ้ามีการกด `Ctrl + C` จะ print `shutting down the server`
 - มี Dockerfile สำหรับ build image และเป็น `Multi-stage build`
 - ใช้ `HTTP Method` และ `HTTP Status Code` อย่างเหมาะสม
