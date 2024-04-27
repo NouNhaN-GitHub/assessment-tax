@@ -1,7 +1,7 @@
 package ktaxes
 
 type Allowance struct {
-	AllowanceType string  `json:"allowance_type" example:"k-receipt"`
+	AllowanceType string  `json:"allowanceType" example:"k-receipt"`
 	Amount        float64 `json:"amount" example:"100.00"`
 }
 

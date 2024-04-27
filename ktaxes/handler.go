@@ -35,7 +35,7 @@ func (h *Handler) TaxCalculationsHandler(c echo.Context) error {
 	if err := c.Bind(&taxRequest); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "bad request body", err.Error())
 	}
-	tax := taxCalculate(taxRequest.TotalIncome, taxRequest.Wht)
+	tax := taxCalculate(taxRequest.TotalIncome, taxRequest.Wht, taxRequest.Allowances)
 	res := TaxResponse{}
 	res.Tax = tax
 	if tax < 0 {
@@ -45,8 +45,20 @@ func (h *Handler) TaxCalculationsHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
-func taxCalculate(totalIncome float64, wht float64) float64 {
+func taxCalculate(totalIncome float64, wht float64, allowances []Allowance) float64 {
 	netIncome := totalIncome - 60000
+
+	amountDonation := 0.0
+	for _, allowance := range allowances {
+		if allowance.AllowanceType == "donation" {
+			amountDonation = allowance.Amount
+			if allowance.Amount > 100000 {
+				amountDonation = 100000
+			}
+
+		}
+	}
+	netIncome = netIncome - amountDonation
 
 	taxLevels := []struct {
 		incomeDiff float64

@@ -7,8 +7,8 @@ K-Tax เป็น Application คำนวนภาษี ที่ให้ผ
 - [x] <input type="checkbox" checked> 1. Clone this repository
 - [x] <input type="checkbox" checked> 2. Create repository in your `Github` account
 - [x] <input type="checkbox" checked> 3. Push starter code to your `Github` account
-4. Create new branch that according to story name
-5. Follow `Functional Requirement` and `Non-Functional Requirement`
+- [x] <input type="checkbox" checked> 4. Create new branch that according to story name
+- [x] <input type="checkbox" checked> 5. Follow `Functional Requirement` and `Non-Functional Requirement`
 
 ## Functional Requirement
 
@@ -43,9 +43,9 @@ K-Tax เป็น Application คำนวนภาษี ที่ให้ผ
 - [x] <input type="checkbox" checked> API support `Graceful Shutdown`
   - เช่น ถ้ามีการกด `Ctrl + C` จะ print `shutting down the server`
 - มี Dockerfile สำหรับ build image และเป็น `Multi-stage build`
-- ใช้ `HTTP Method` และ `HTTP Status Code` อย่างเหมาะสม
-- ใช้ `gofmt` และ `go vet`
-- แยก Branch ของแต่ละ Story ออกจาก `main` และ Merge กลับไปยัง `main` Branch เสมอ
+- [x] <input type="checkbox" checked> ใช้ `HTTP Method` และ `HTTP Status Code` อย่างเหมาะสม
+- [x] <input type="checkbox" checked> ใช้ `gofmt` และ `go vet`
+- [x] <input type="checkbox" checked> แยก Branch ของแต่ละ Story ออกจาก `main` และ Merge กลับไปยัง `main` Branch เสมอ
   - เช่น story ที่ 1 จะใช้ branch ชื่อ `feature/story-1` หรือ `feature/store-1-create-tax-calculation`
 - [x] <input type="checkbox" checked> admin กำหนด Basic authen ด้วย username: `adminTax`, password: `admin!`
   - username และ password ต้องเป็น environment variable
@@ -126,7 +126,7 @@ Response body
 </details>
 
 -------
-### Story: EXP02
+[x] <input type="checkbox" checked> ### Story: EXP02
 
 ```
 * As user, I want to calculate my tax with WHT
