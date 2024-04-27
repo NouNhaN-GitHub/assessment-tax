@@ -36,6 +36,11 @@ func main() {
 		ktax.GET("/allowance", handler.AllowanceHandler)
 	}
 
+	tax := e.Group("/tax")
+	{
+		tax.POST("/calculations", handler.TaxCalculationsHandler)
+	}
+
 	admin := e.Group("/admin")
 	admin.Use(middleware.BasicAuth(func(username string, password string, c echo.Context) (bool, error) {
 		if username == os.Getenv("ADMIN_USERNAME") && password == os.Getenv("ADMIN_PASSWORD") {

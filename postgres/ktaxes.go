@@ -1,15 +1,12 @@
 package postgres
 
 import (
-	"time"
-
 	"github.com/NouNhaN-GitHub/assessment-tax/ktaxes"
 )
 
 type Allowance struct {
-	AllowanceType string    `postgres:"allowance_type"`
-	Amount        float64   `postgres:"amount"`
-	CreatedAt     time.Time `postgres:"created_at"`
+	AllowanceType string  `postgres:"allowance_type"`
+	Amount        float64 `postgres:"amount"`
 }
 
 func (p *Postgres) Allowances() ([]ktaxes.Allowance, error) {
@@ -24,7 +21,6 @@ func (p *Postgres) Allowances() ([]ktaxes.Allowance, error) {
 		var a Allowance
 		err := rows.Scan(&a.AllowanceType,
 			&a.Amount,
-			&a.CreatedAt,
 		)
 		if err != nil {
 			return nil, err
@@ -32,7 +28,6 @@ func (p *Postgres) Allowances() ([]ktaxes.Allowance, error) {
 		allowances = append(allowances, ktaxes.Allowance{
 			AllowanceType: a.AllowanceType,
 			Amount:        a.Amount,
-			CreatedAt:     a.CreatedAt,
 		})
 	}
 	return allowances, nil
