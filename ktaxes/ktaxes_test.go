@@ -22,13 +22,14 @@ func TestTaxCalculate(t *testing.T) {
 		{TaxRequest{560000.0, 36000, nil}, -1000.0},
 		{TaxRequest{1060000.0, 111000, nil}, -1000.0},
 		{TaxRequest{2060000.0, 311000, nil}, -1000.0},
+		{TaxRequest{500000.0, 0.0, []Allowance{{"donation", 200000.0}}}, 19000.0},
 	}
 
 	// Act & Assert
 	for _, c := range cases {
 		// Act
-		tax := taxCalculate(c.request.TotalIncome, c.request.Wht)
+		tax := taxCalculate(c.request.TotalIncome, c.request.Wht, c.request.Allowances)
 		// Assert
-		assert.Equal(t, c.expected, tax, "tax calculation is incorrect : totalIncome = %.2f , wht = %.2f", c.request.TotalIncome, c.request.Wht)
+		assert.Equal(t, c.expected, tax, "tax calculation is incorrect : totalIncome = %.2f , wht = %.2f, allowances = %+v", c.request.TotalIncome, c.request.Wht, c.request.Allowances)
 	}
 }
