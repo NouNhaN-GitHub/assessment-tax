@@ -82,7 +82,7 @@ K-Tax เป็น Application คำนวนภาษี ที่ให้ผ
 
 ## User stories
 
-### Story: EXP01
+ [x] <input type="checkbox" checked> ### Story: EXP01
 
 ```
 * As user, I want to calculate my tax
