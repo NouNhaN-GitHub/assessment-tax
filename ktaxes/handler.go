@@ -149,6 +149,7 @@ func taxCalculate(totalIncome float64, wht float64, allowances []Allowance, pers
 	netIncome := totalIncome - personalDeduction
 
 	amountDonation := 0.0
+	amountKreceipt := 0.0
 	for _, allowance := range allowances {
 		if allowance.AllowanceType == "donation" {
 			amountDonation = allowance.Amount
@@ -156,8 +157,14 @@ func taxCalculate(totalIncome float64, wht float64, allowances []Allowance, pers
 				amountDonation = 100000
 			}
 		}
+		if allowance.AllowanceType == "k-receipt" {
+			amountKreceipt = allowance.Amount
+			if allowance.Amount > 50000 {
+				amountKreceipt = 50000
+			}
+		}
 	}
-	netIncome = netIncome - amountDonation
+	netIncome = netIncome - amountDonation - amountKreceipt
 
 	displayTaxLevels := []TaxLevel{
 		{"0-150,000", 0.0},
