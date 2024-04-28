@@ -1,7 +1,9 @@
 package ktaxes
 
 import (
+	"encoding/csv"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -21,6 +23,12 @@ func New(db Storer) *Handler {
 
 type Err struct {
 	Message string `json:"message"`
+}
+
+type TaxCSV struct {
+	TotalIncome float64 `json:"totalIncome"`
+	Tax         float64 `json:"tax"`
+	TaxRefund   float64 `json:"taxRefund,omitempty"`
 }
 
 func (h *Handler) AllowanceHandler(c echo.Context) error {
@@ -78,6 +86,63 @@ func (h *Handler) TaxCalculationsHandler(c echo.Context) error {
 		res.TaxRefund = 0 - tax
 	}
 	return c.JSON(http.StatusOK, res)
+}
+
+func (h *Handler) TaxCalculationsCSVHandler(c echo.Context) error {
+	file, err := c.FormFile("taxFile")
+	if err != nil {
+		return err
+	}
+
+	if file.Filename != "taxes.csv" {
+		return echo.NewHTTPError(http.StatusBadRequest, "File name taxes.csv")
+	}
+	src, err := file.Open()
+	if err != nil {
+		return err
+	}
+	defer src.Close()
+
+	reader := csv.NewReader(src)
+	reader.FieldsPerRecord = 3
+	rows, err := reader.ReadAll()
+	if err != nil {
+		echo.NewHTTPError(http.StatusBadRequest, "Invalid file format.", err.Error())
+	}
+	if rows[0][0] != "totalIncome" || rows[0][1] != "wht" || rows[0][2] != "donation" {
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid header format. header row with 'totalIncome,wht,donation'")
+	}
+	taxes := []TaxCSV{}
+	for _, row := range rows[1:] {
+		totalIncome, _ := strconv.ParseFloat(row[0], 64)
+		wht, _ := strconv.ParseFloat(row[1], 64)
+		donation, _ := strconv.ParseFloat(row[2], 64)
+
+		allowances, err := h.store.Allowances()
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		}
+		personalDeduction := 0.0
+		for _, allowance := range allowances {
+			if allowance.AllowanceType == "personal" {
+				personalDeduction = allowance.Amount
+			}
+		}
+		tax, _ := taxCalculate(totalIncome, wht, []Allowance{{"donation", donation}}, personalDeduction)
+
+		res := TaxCSV{}
+
+		res.TotalIncome = totalIncome
+		res.Tax = tax
+		if tax < 0 {
+			res.Tax = 0
+			res.TaxRefund = 0 - tax
+		}
+		taxes = append(taxes, res)
+	}
+	return c.JSON(http.StatusOK, struct {
+		Taxes []TaxCSV `json:"taxes"`
+	}{taxes})
 }
 
 func taxCalculate(totalIncome float64, wht float64, allowances []Allowance, personalDeduction float64) (float64, []TaxLevel) {
