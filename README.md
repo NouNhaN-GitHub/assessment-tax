@@ -42,7 +42,7 @@ K-Tax เป็น Application คำนวนภาษี ที่ให้ผ
 - [x] <input type="checkbox" checked> ใช้ `docker compose` สำหรับต่อ Database
 - [x] <input type="checkbox" checked> API support `Graceful Shutdown`
   - เช่น ถ้ามีการกด `Ctrl + C` จะ print `shutting down the server`
-- มี Dockerfile สำหรับ build image และเป็น `Multi-stage build`
+- [x] <input type="checkbox" checked> มี Dockerfile สำหรับ build image และเป็น `Multi-stage build`
 - [x] <input type="checkbox" checked> ใช้ `HTTP Method` และ `HTTP Status Code` อย่างเหมาะสม
 - [x] <input type="checkbox" checked> ใช้ `gofmt` และ `go vet`
 - [x] <input type="checkbox" checked> แยก Branch ของแต่ละ Story ออกจาก `main` และ Merge กลับไปยัง `main` Branch เสมอ
