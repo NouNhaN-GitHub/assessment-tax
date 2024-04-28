@@ -60,6 +60,27 @@ func (h *Handler) PersonalDeductionHandler(c echo.Context) error {
 	}{updatedAllowance})
 }
 
+func (h *Handler) KreceiptDeductionHandler(c echo.Context) error {
+	body := struct {
+		Amount float64 `json:"amount"`
+	}{}
+
+	err := c.Bind(&body)
+	if body.Amount < 0 || body.Amount > 100000 {
+		return c.JSON(http.StatusBadRequest, Err{Message: "K-receipt amount must between 1 - 100,000"})
+	}
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, Err{Message: err.Error()})
+	}
+	updatedAllowance, err := h.store.UpdateAllowance(body.Amount, "k-receipt")
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, Err{Message: err.Error()})
+	}
+	return c.JSON(http.StatusOK, struct {
+		KreceiptDeduction float64 `json:"kReceipt"`
+	}{updatedAllowance})
+}
+
 func (h *Handler) TaxCalculationsHandler(c echo.Context) error {
 	taxRequest := TaxRequest{}
 	if err := c.Bind(&taxRequest); err != nil {
@@ -71,13 +92,17 @@ func (h *Handler) TaxCalculationsHandler(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 	personalDeduction := 0.0
+	kreceiptDeduction := 0.0
 	for _, allowance := range allowances {
 		if allowance.AllowanceType == "personal" {
 			personalDeduction = allowance.Amount
 		}
+		if allowance.AllowanceType == "k-receipt" {
+			kreceiptDeduction = allowance.Amount
+		}
 	}
 
-	tax, taxLevels := taxCalculate(taxRequest.TotalIncome, taxRequest.Wht, taxRequest.Allowances, personalDeduction)
+	tax, taxLevels := taxCalculate(taxRequest.TotalIncome, taxRequest.Wht, taxRequest.Allowances, personalDeduction, kreceiptDeduction)
 	res := TaxResponse{}
 	res.TaxLevels = taxLevels
 	res.Tax = tax
@@ -123,12 +148,16 @@ func (h *Handler) TaxCalculationsCSVHandler(c echo.Context) error {
 			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
 		personalDeduction := 0.0
+		kreceiptDeduction := 0.0
 		for _, allowance := range allowances {
 			if allowance.AllowanceType == "personal" {
 				personalDeduction = allowance.Amount
 			}
+			if allowance.AllowanceType == "k-receipt" {
+				kreceiptDeduction = allowance.Amount
+			}
 		}
-		tax, _ := taxCalculate(totalIncome, wht, []Allowance{{"donation", donation}}, personalDeduction)
+		tax, _ := taxCalculate(totalIncome, wht, []Allowance{{"donation", donation}}, personalDeduction, kreceiptDeduction)
 
 		res := TaxCSV{}
 
@@ -145,7 +174,7 @@ func (h *Handler) TaxCalculationsCSVHandler(c echo.Context) error {
 	}{taxes})
 }
 
-func taxCalculate(totalIncome float64, wht float64, allowances []Allowance, personalDeduction float64) (float64, []TaxLevel) {
+func taxCalculate(totalIncome float64, wht float64, allowances []Allowance, personalDeduction float64, kreceiptDeduction float64) (float64, []TaxLevel) {
 	netIncome := totalIncome - personalDeduction
 
 	amountDonation := 0.0
@@ -159,8 +188,8 @@ func taxCalculate(totalIncome float64, wht float64, allowances []Allowance, pers
 		}
 		if allowance.AllowanceType == "k-receipt" {
 			amountKreceipt = allowance.Amount
-			if allowance.Amount > 50000 {
-				amountKreceipt = 50000
+			if allowance.Amount > kreceiptDeduction {
+				amountKreceipt = kreceiptDeduction
 			}
 		}
 	}

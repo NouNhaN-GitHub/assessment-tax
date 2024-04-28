@@ -265,7 +265,7 @@ Response body
 ```
 ----
 
-### Story: EXP05
+- [x] <input type="checkbox" checked> ### Story: EXP05
 
 ```
 * As admin, I want to setting personal deduction
@@ -290,7 +290,7 @@ Response body
 ----
 
 
-### Story: EXP06
+- [x] <input type="checkbox" checked> ### Story: EXP06
 
 ```
 * As user, I want to calculate my tax with csv
@@ -324,7 +324,7 @@ Response body
 ```
 
 -------
-### Story: EXP07
+- [x] <input type="checkbox" checked> ### Story: EXP07
 
 ```
 * As user, I want to calculate my tax with tax level detail
@@ -396,7 +396,7 @@ Response body
 
 ----
 
-### Story: EXP08
+- [x] <input type="checkbox" checked> ### Story: EXP08
 
 ```
 * As admin, I want to setting k-receipt deduction
