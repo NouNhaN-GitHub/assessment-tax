@@ -9,81 +9,82 @@ import (
 func TestTaxCalculate(t *testing.T) {
 	// Arrange
 	cases := []struct {
-		request        TaxRequest
-		expected       float64
-		expectedLevels []TaxLevel
+		request           TaxRequest
+		personalDeduction float64
+		expected          float64
+		expectedLevels    []TaxLevel
 	}{
-		{TaxRequest{60000.0, 0.0, nil}, 0.0, []TaxLevel{
+		{TaxRequest{60000.0, 0.0, nil}, 60000.0, 0.0, []TaxLevel{
 			{"0-150,000", 0.0},
 			{"150,001-500,000", 0.0},
 			{"500,001-1,000,000", 0.0},
 			{"1,000,001-2,000,000", 0.0},
 			{"2,000,001 ขึ้นไป", 0.0},
 		}},
-		{TaxRequest{210000.0, 0.0, nil}, 0.0, []TaxLevel{
+		{TaxRequest{210000.0, 0.0, nil}, 60000.0, 0.0, []TaxLevel{
 			{"0-150,000", 0.0},
 			{"150,001-500,000", 0.0},
 			{"500,001-1,000,000", 0.0},
 			{"1,000,001-2,000,000", 0.0},
 			{"2,000,001 ขึ้นไป", 0.0},
 		}},
-		{TaxRequest{500000.0, 0.0, nil}, 29000.0, []TaxLevel{
+		{TaxRequest{500000.0, 0.0, nil}, 60000.0, 29000.0, []TaxLevel{
 			{"0-150,000", 0.0},
 			{"150,001-500,000", 29000.0},
 			{"500,001-1,000,000", 0.0},
 			{"1,000,001-2,000,000", 0.0},
 			{"2,000,001 ขึ้นไป", 0.0},
 		}},
-		{TaxRequest{560000.0, 0.0, nil}, 35000.0, []TaxLevel{
+		{TaxRequest{560000.0, 0.0, nil}, 60000.0, 35000.0, []TaxLevel{
 			{"0-150,000", 0.0},
 			{"150,001-500,000", 35000.0},
 			{"500,001-1,000,000", 0.0},
 			{"1,000,001-2,000,000", 0.0},
 			{"2,000,001 ขึ้นไป", 0.0},
 		}},
-		{TaxRequest{1060000.0, 0.0, nil}, 110000.0, []TaxLevel{
+		{TaxRequest{1060000.0, 0.0, nil}, 60000.0, 110000.0, []TaxLevel{
 			{"0-150,000", 0.0},
 			{"150,001-500,000", 35000.0},
 			{"500,001-1,000,000", 75000.0},
 			{"1,000,001-2,000,000", 0.0},
 			{"2,000,001 ขึ้นไป", 0.0},
 		}},
-		{TaxRequest{2060000.0, 0.0, nil}, 310000.0, []TaxLevel{
+		{TaxRequest{2060000.0, 0.0, nil}, 60000.0, 310000.0, []TaxLevel{
 			{"0-150,000", 0.0},
 			{"150,001-500,000", 35000.0},
 			{"500,001-1,000,000", 75000.0},
 			{"1,000,001-2,000,000", 200000.0},
 			{"2,000,001 ขึ้นไป", 0.0},
 		}},
-		{TaxRequest{500000.0, 30000.0, nil}, -1000.0, []TaxLevel{
+		{TaxRequest{500000.0, 30000.0, nil}, 60000.0, -1000.0, []TaxLevel{
 			{"0-150,000", 0.0},
 			{"150,001-500,000", 29000.0},
 			{"500,001-1,000,000", 0.0},
 			{"1,000,001-2,000,000", 0.0},
 			{"2,000,001 ขึ้นไป", 0.0},
 		}},
-		{TaxRequest{560000.0, 36000, nil}, -1000.0, []TaxLevel{
+		{TaxRequest{560000.0, 36000, nil}, 60000.0, -1000.0, []TaxLevel{
 			{"0-150,000", 0.0},
 			{"150,001-500,000", 35000.0},
 			{"500,001-1,000,000", 0.0},
 			{"1,000,001-2,000,000", 0.0},
 			{"2,000,001 ขึ้นไป", 0.0},
 		}},
-		{TaxRequest{1060000.0, 111000, nil}, -1000.0, []TaxLevel{
+		{TaxRequest{1060000.0, 111000, nil}, 60000.0, -1000.0, []TaxLevel{
 			{"0-150,000", 0.0},
 			{"150,001-500,000", 35000.0},
 			{"500,001-1,000,000", 75000.0},
 			{"1,000,001-2,000,000", 0.0},
 			{"2,000,001 ขึ้นไป", 0.0},
 		}},
-		{TaxRequest{2060000.0, 311000, nil}, -1000.0, []TaxLevel{
+		{TaxRequest{2060000.0, 311000, nil}, 60000.0, -1000.0, []TaxLevel{
 			{"0-150,000", 0.0},
 			{"150,001-500,000", 35000.0},
 			{"500,001-1,000,000", 75000.0},
 			{"1,000,001-2,000,000", 200000.0},
 			{"2,000,001 ขึ้นไป", 0.0},
 		}},
-		{TaxRequest{500000.0, 0.0, []Allowance{{"donation", 200000.0}}}, 19000.0, []TaxLevel{
+		{TaxRequest{500000.0, 0.0, []Allowance{{"donation", 200000.0}}}, 60000.0, 19000.0, []TaxLevel{
 			{"0-150,000", 0.0},
 			{"150,001-500,000", 19000.0},
 			{"500,001-1,000,000", 0.0},
@@ -95,7 +96,7 @@ func TestTaxCalculate(t *testing.T) {
 	// Act & Assert
 	for _, c := range cases {
 		// Act
-		tax, taxLevels := taxCalculate(c.request.TotalIncome, c.request.Wht, c.request.Allowances)
+		tax, taxLevels := taxCalculate(c.request.TotalIncome, c.request.Wht, c.request.Allowances, c.personalDeduction)
 		// Assert
 		assert.Equal(t, c.expected, tax, "tax calculation is incorrect : totalIncome = %.2f , wht = %.2f, allowances = %+v", c.request.TotalIncome, c.request.Wht, c.request.Allowances)
 		assert.Equal(t, c.expectedLevels, taxLevels, "taxLevels calculation is incorrect : totalIncome = %.2f , wht = %.2f, allowances = %+v", c.request.TotalIncome, c.request.Wht, c.request.Allowances)

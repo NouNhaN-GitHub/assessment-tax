@@ -50,7 +50,7 @@ func main() {
 		return false, nil
 	}))
 	{
-
+		admin.POST("/deductions/personal", handler.PersonalDeductionHandler)
 	}
 
 	go func() {

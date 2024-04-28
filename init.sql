@@ -2,9 +2,8 @@
 CREATE TYPE allowance_type AS ENUM ('donation', 'k-receipt', 'personal');
 
 CREATE TABLE IF NOT EXISTS allowances (
-    allowance_type allowance_type NOT NULL,
-    amount DECIMAL(10, 2) NOT NULL,
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    allowance_type allowance_type NOT NULL UNIQUE,
+    amount DECIMAL(10, 2) NOT NULL
 );
 
 INSERT INTO allowances (allowance_type, amount) VALUES

@@ -12,6 +12,7 @@ type Handler struct {
 
 type Storer interface {
 	Allowances() ([]Allowance, error)
+	UpdateAllowance(amount float64, allowance_type string) (float64, error)
 }
 
 func New(db Storer) *Handler {
@@ -30,12 +31,45 @@ func (h *Handler) AllowanceHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, allowances)
 }
 
+func (h *Handler) PersonalDeductionHandler(c echo.Context) error {
+	body := struct {
+		Amount float64 `json:"amount"`
+	}{}
+
+	err := c.Bind(&body)
+	if body.Amount <= 10000 || body.Amount > 100000 {
+		return c.JSON(http.StatusBadRequest, Err{Message: "personal amount must between 10,001 - 100,000"})
+	}
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, Err{Message: err.Error()})
+	}
+	updatedAllowance, err := h.store.UpdateAllowance(body.Amount, "personal")
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, Err{Message: err.Error()})
+	}
+	return c.JSON(http.StatusOK, struct {
+		PersonalDeduction float64 `json:"personalDeduction"`
+	}{updatedAllowance})
+}
+
 func (h *Handler) TaxCalculationsHandler(c echo.Context) error {
 	taxRequest := TaxRequest{}
 	if err := c.Bind(&taxRequest); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "bad request body", err.Error())
 	}
-	tax, taxLevels := taxCalculate(taxRequest.TotalIncome, taxRequest.Wht, taxRequest.Allowances)
+
+	allowances, err := h.store.Allowances()
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	personalDeduction := 0.0
+	for _, allowance := range allowances {
+		if allowance.AllowanceType == "personal" {
+			personalDeduction = allowance.Amount
+		}
+	}
+
+	tax, taxLevels := taxCalculate(taxRequest.TotalIncome, taxRequest.Wht, taxRequest.Allowances, personalDeduction)
 	res := TaxResponse{}
 	res.TaxLevels = taxLevels
 	res.Tax = tax
@@ -46,8 +80,8 @@ func (h *Handler) TaxCalculationsHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
-func taxCalculate(totalIncome float64, wht float64, allowances []Allowance) (float64, []TaxLevel) {
-	netIncome := totalIncome - 60000
+func taxCalculate(totalIncome float64, wht float64, allowances []Allowance, personalDeduction float64) (float64, []TaxLevel) {
+	netIncome := totalIncome - personalDeduction
 
 	amountDonation := 0.0
 	for _, allowance := range allowances {
@@ -56,7 +90,6 @@ func taxCalculate(totalIncome float64, wht float64, allowances []Allowance) (flo
 			if allowance.Amount > 100000 {
 				amountDonation = 100000
 			}
-
 		}
 	}
 	netIncome = netIncome - amountDonation

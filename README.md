@@ -31,7 +31,7 @@ K-Tax เป็น Application คำนวนภาษี ที่ให้ผ
 - ในกรณีที่รายรับ รวมหักค่าลดหย่อน พร้อมทั้ง wht พบว่าต้องได้เงินคืน จะต้องคำนวนเงินที่ต้องได้รับคืนใน field ใหม่ ที่ชื่อว่า taxRefund
 
 ## Non-Functional Requirement
-- มี `Unit Test` ครอบคลุม
+- [x] <input type="checkbox" checked> มี `Unit Test` ครอบคลุม
 - [x] <input type="checkbox" checked> ใช้ `go module`
 - [x] <input type="checkbox" checked> ใช้ go module `go mod init github.com/<your github name>/assessment-tax`
 - [x] <input type="checkbox" checked> ใช้ go 1.21 or above
@@ -82,7 +82,7 @@ K-Tax เป็น Application คำนวนภาษี ที่ให้ผ
 
 ## User stories
 
- [x] <input type="checkbox" checked> ### Story: EXP01
+ - [x] <input type="checkbox" checked> ### Story: EXP01
 
 ```
 * As user, I want to calculate my tax
@@ -126,7 +126,7 @@ Response body
 </details>
 
 -------
-[x] <input type="checkbox" checked> ### Story: EXP02
+- [x] <input type="checkbox" checked> ### Story: EXP02
 
 ```
 * As user, I want to calculate my tax with WHT
@@ -165,7 +165,7 @@ Response body
 </details>
 
 -------
-### Story: EXP03
+- [x] <input type="checkbox" checked> ### Story: EXP03
 
 ```
 * As user, I want to calculate my tax
@@ -212,7 +212,7 @@ Response body
 
 
 -------
-### Story: EXP04
+- [x] <input type="checkbox" checked> ### Story: EXP04
 
 ```
 * As user, I want to calculate my tax with tax level detail
