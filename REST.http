@@ -77,7 +77,6 @@ Content-Type: application/json
   "amount": 60000.0
 }
 
-
 ###
 POST http://localhost:8080/tax/calculations/upload-csv
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
@@ -106,4 +105,13 @@ Content-Type: application/json
       "amount": 100000.0
     }
   ]
+}
+
+###
+POST http://localhost:8080/admin/deductions/k-receipt
+Authorization: Basic adminTax:admin!
+Content-Type: application/json
+
+{
+  "amount": 70000.0
 }

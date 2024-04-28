@@ -52,6 +52,7 @@ func main() {
 	}))
 	{
 		admin.POST("/deductions/personal", handler.PersonalDeductionHandler)
+		admin.POST("/deductions/k-receipt", handler.KreceiptDeductionHandler)
 	}
 
 	go func() {
